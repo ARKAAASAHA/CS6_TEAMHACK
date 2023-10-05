@@ -1,0 +1,35 @@
+{
+	"name": "AzureSqlTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "nationkey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "nname",
+				"type": "varchar"
+			},
+			{
+				"name": "regionkey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "rname",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "nationregion"
+		}
+	}
+}

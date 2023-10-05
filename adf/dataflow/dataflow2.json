@@ -1,0 +1,88 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "nation",
+						"type": "DatasetReference"
+					},
+					"name": "nation"
+				},
+				{
+					"dataset": {
+						"referenceName": "region",
+						"type": "DatasetReference"
+					},
+					"name": "region"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "natreg"
+				}
+			],
+			"transformations": [
+				{
+					"name": "nationjoinregion"
+				},
+				{
+					"name": "sort1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          N_NATIONKEY as integer,",
+				"          N_NAME as string,",
+				"          N_REGIONKEY as integer,",
+				"          N_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> nation",
+				"source(output(",
+				"          R_REGIONKEY as integer,",
+				"          R_NAME as string,",
+				"          R_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> region",
+				"nation, region join(N_REGIONKEY == R_REGIONKEY,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> nationjoinregion",
+				"nationjoinregion sort(asc(R_REGIONKEY, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          nationkey as integer,",
+				"          nname as string,",
+				"          regionkey as integer,",
+				"          rname as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          regionkey = R_REGIONKEY,",
+				"          rname = R_NAME,",
+				"          nationkey = N_NATIONKEY,",
+				"          nname = N_NAME",
+				"     )) ~> natreg"
+			]
+		}
+	}
+}
