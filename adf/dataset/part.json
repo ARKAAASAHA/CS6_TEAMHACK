@@ -1,0 +1,60 @@
+{
+	"name": "part",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "part.csv",
+				"container": "input"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "P_PARTKEY",
+				"type": "String"
+			},
+			{
+				"name": "P_NAME",
+				"type": "String"
+			},
+			{
+				"name": "P_MFGR",
+				"type": "String"
+			},
+			{
+				"name": "P_BRAND",
+				"type": "String"
+			},
+			{
+				"name": "P_TYPE",
+				"type": "String"
+			},
+			{
+				"name": "P_SIZE",
+				"type": "String"
+			},
+			{
+				"name": "P_CONTAINER",
+				"type": "String"
+			},
+			{
+				"name": "P_RETAILPRICE",
+				"type": "String"
+			},
+			{
+				"name": "P_COMMENT",
+				"type": "String"
+			}
+		]
+	}
+}

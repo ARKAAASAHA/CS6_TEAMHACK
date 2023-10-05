@@ -24,6 +24,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "region"
+				},
+				{
+					"dataset": {
+						"referenceName": "orders",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -41,6 +48,12 @@
 				},
 				{
 					"name": "joinnationregion"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -74,16 +87,39 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> region",
-				"customer alterRow(deleteIf(isNull(C_CUSTKEY) && isNull(C_NATIONKEY))) ~> DeleteNullrecords",
+				"source(output(",
+				"          O_ORDERKEY as string,",
+				"          O_CUSTKEY as string,",
+				"          O_ORDERSTATUS as string,",
+				"          O_TOTALPRICE as string,",
+				"          O_ORDERDATE as string,",
+				"          O_ORDERPRIORITY as string,",
+				"          O_CLERK as string,",
+				"          O_SHIPPRIORITY as string,",
+				"          O_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"customer alterRow(deleteIf(isNull(C_CUSTKEY)&&isNull(C_NATIONKEY))) ~> DeleteNullrecords",
 				"nation, region join(N_REGIONKEY == R_REGIONKEY,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinnationregion",
-				"joinnationregion sink(allowSchemaDrift: true,",
+				" derive(column2 = ERROR_FUNCTION('')) ~> derivedColumn1",
+				"joinnationregion derive() ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          NATIONKEY = N_NATIONKEY,",
+				"          NATIONNAME = N_NAME,",
+				"          NATIONREGIONKEY = N_REGIONKEY,",
+				"          REGIONKEY = R_REGIONKEY,",
+				"          REGIONNAME = R_NAME",
+				"     )) ~> sink1"
 			]
 		}
 	}

@@ -1,0 +1,44 @@
+{
+	"name": "partsupp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "partsupp.csv",
+				"container": "input"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PS_PARTKEY",
+				"type": "String"
+			},
+			{
+				"name": "PS_SUPPKEY",
+				"type": "String"
+			},
+			{
+				"name": "PS_AVAILQTY",
+				"type": "String"
+			},
+			{
+				"name": "PS_SUPPLYCOST",
+				"type": "String"
+			},
+			{
+				"name": "PS_COMMENT",
+				"type": "String"
+			}
+		]
+	}
+}
