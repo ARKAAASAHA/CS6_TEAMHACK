@@ -55,6 +55,7 @@
 									"customer": {},
 									"nation": {},
 									"region": {},
+									"source1": {},
 									"sink1": {}
 								}
 							},
@@ -243,6 +244,185 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/orders')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "orders.csv",
+						"container": "input"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "O_ORDERKEY",
+						"type": "String"
+					},
+					{
+						"name": "O_CUSTKEY",
+						"type": "String"
+					},
+					{
+						"name": "O_ORDERSTATUS",
+						"type": "String"
+					},
+					{
+						"name": "O_TOTALPRICE",
+						"type": "String"
+					},
+					{
+						"name": "O_ORDERDATE",
+						"type": "String"
+					},
+					{
+						"name": "O_ORDERPRIORITY",
+						"type": "String"
+					},
+					{
+						"name": "O_CLERK",
+						"type": "String"
+					},
+					{
+						"name": "O_SHIPPRIORITY",
+						"type": "String"
+					},
+					{
+						"name": "O_COMMENT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/part')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "part.csv",
+						"container": "input"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "P_PARTKEY",
+						"type": "String"
+					},
+					{
+						"name": "P_NAME",
+						"type": "String"
+					},
+					{
+						"name": "P_MFGR",
+						"type": "String"
+					},
+					{
+						"name": "P_BRAND",
+						"type": "String"
+					},
+					{
+						"name": "P_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "P_SIZE",
+						"type": "String"
+					},
+					{
+						"name": "P_CONTAINER",
+						"type": "String"
+					},
+					{
+						"name": "P_RETAILPRICE",
+						"type": "String"
+					},
+					{
+						"name": "P_COMMENT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/partsupp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "partsupp.csv",
+						"container": "input"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PS_PARTKEY",
+						"type": "String"
+					},
+					{
+						"name": "PS_SUPPKEY",
+						"type": "String"
+					},
+					{
+						"name": "PS_AVAILQTY",
+						"type": "String"
+					},
+					{
+						"name": "PS_SUPPLYCOST",
+						"type": "String"
+					},
+					{
+						"name": "PS_COMMENT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/region')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -275,6 +455,63 @@
 					},
 					{
 						"name": "R_COMMENT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/supplier')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "supplier.csv",
+						"container": "input"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "S_SUPPKEY",
+						"type": "String"
+					},
+					{
+						"name": "S_NAME",
+						"type": "String"
+					},
+					{
+						"name": "S_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "S_NATIONKEY",
+						"type": "String"
+					},
+					{
+						"name": "S_PHONE",
+						"type": "String"
+					},
+					{
+						"name": "S_ACCTBAL",
+						"type": "String"
+					},
+					{
+						"name": "S_COMMENT",
 						"type": "String"
 					}
 				]
@@ -363,6 +600,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "region"
+						},
+						{
+							"dataset": {
+								"referenceName": "orders",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
 						}
 					],
 					"sinks": [
@@ -413,6 +657,20 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> region",
+						"source(output(",
+						"          O_ORDERKEY as string,",
+						"          O_CUSTKEY as string,",
+						"          O_ORDERSTATUS as string,",
+						"          O_TOTALPRICE as string,",
+						"          O_ORDERDATE as string,",
+						"          O_ORDERPRIORITY as string,",
+						"          O_CLERK as string,",
+						"          O_SHIPPRIORITY as string,",
+						"          O_COMMENT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
 						"customer alterRow(deleteIf(isNull(C_CUSTKEY)&&isNull(C_NATIONKEY))) ~> DeleteNullrecords",
 						"nation, region join(N_REGIONKEY == R_REGIONKEY,",
 						"     joinType:'inner',",
@@ -422,7 +680,14 @@
 						"joinnationregion sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          NATIONKEY = N_NATIONKEY,",
+						"          NATIONNAME = N_NAME,",
+						"          NATIONREGIONKEY = N_REGIONKEY,",
+						"          REGIONKEY = R_REGIONKEY,",
+						"          REGIONNAME = R_NAME",
+						"     )) ~> sink1"
 					]
 				}
 			},
@@ -430,6 +695,7 @@
 				"[concat(variables('factoryId'), '/datasets/customer')]",
 				"[concat(variables('factoryId'), '/datasets/nation')]",
 				"[concat(variables('factoryId'), '/datasets/region')]",
+				"[concat(variables('factoryId'), '/datasets/orders')]",
 				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
 			]
 		}
