@@ -1,0 +1,52 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "custkey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cname",
+				"type": "varchar"
+			},
+			{
+				"name": "caddress",
+				"type": "varchar"
+			},
+			{
+				"name": "cnation",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cphone",
+				"type": "varchar"
+			},
+			{
+				"name": "caccbal",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "cmanagement",
+				"type": "varchar"
+			},
+			{
+				"name": "ccomminsion",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "customers"
+		}
+	}
+}
