@@ -48,12 +48,6 @@
 				},
 				{
 					"name": "joinnationregion"
-				},
-				{
-					"name": "derivedColumn1"
-				},
-				{
-					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -107,9 +101,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinnationregion",
-				" derive(column2 = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"joinnationregion derive() ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"joinnationregion sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
