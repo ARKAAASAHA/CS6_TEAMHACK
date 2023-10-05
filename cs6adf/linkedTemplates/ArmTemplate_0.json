@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage3'"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://cs6kv.vault.azure.net/"
@@ -79,6 +83,76 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "custkey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "cname",
+						"type": "varchar"
+					},
+					{
+						"name": "caddress",
+						"type": "varchar"
+					},
+					{
+						"name": "cnation",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "cphone",
+						"type": "varchar"
+					},
+					{
+						"name": "caccbal",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "cmanagement",
+						"type": "varchar"
+					},
+					{
+						"name": "ccomminsion",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "customers"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
@@ -192,7 +266,67 @@
 				},
 				"schema": [
 					{
-						"name": "L_ORDERKEY\tL_PARTKEY\tL_SUPPKEY\tL_LINENUMBER\tL_QUANTITY\tL_EXTENDEDPRICE\tL_DISCOUNT\tL_TAX\tL_RETURNFLAG\tL_LINESTATUS\tL_SHIPDATE\tL_COMMITDATE\tL_RECEIPTDATE\tL_SHIPINSTRUCT\tL_SHIPMODE\tL_COMMENT",
+						"name": "L_ORDERKEY",
+						"type": "String"
+					},
+					{
+						"name": "L_PARTKEY",
+						"type": "String"
+					},
+					{
+						"name": "L_SUPPKEY",
+						"type": "String"
+					},
+					{
+						"name": "L_LINENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "L_QUANTITY",
+						"type": "String"
+					},
+					{
+						"name": "L_EXTENDEDPRICE",
+						"type": "String"
+					},
+					{
+						"name": "L_DISCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "L_TAX",
+						"type": "String"
+					},
+					{
+						"name": "L_RETURNFLAG",
+						"type": "String"
+					},
+					{
+						"name": "L_LINESTATUS",
+						"type": "String"
+					},
+					{
+						"name": "L_SHIPDATE",
+						"type": "String"
+					},
+					{
+						"name": "L_COMMITDATE",
+						"type": "String"
+					},
+					{
+						"name": "L_RECEIPTDATE",
+						"type": "String"
+					},
+					{
+						"name": "L_SHIPINSTRUCT",
+						"type": "String"
+					},
+					{
+						"name": "L_SHIPMODE",
+						"type": "String"
+					},
+					{
+						"name": "L_COMMENT",
 						"type": "String"
 					}
 				]
@@ -536,45 +670,27 @@
 								"referenceName": "customer",
 								"type": "DatasetReference"
 							},
-							"name": "customer"
-						},
-						{
-							"dataset": {
-								"referenceName": "nation",
-								"type": "DatasetReference"
-							},
-							"name": "nation"
-						},
-						{
-							"dataset": {
-								"referenceName": "region",
-								"type": "DatasetReference"
-							},
-							"name": "region"
-						},
-						{
-							"dataset": {
-								"referenceName": "orders",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
+							"name": "Customer"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "DelimitedText1",
+								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "sinkinsql"
 						}
 					],
 					"transformations": [
 						{
-							"name": "DeleteNullrecords"
+							"name": "removrenullwithunknown"
 						},
 						{
-							"name": "joinnationregion"
+							"name": "DeleteNullrecord"
+						},
+						{
+							"name": "sortaccbal"
 						}
 					],
 					"scriptLines": [
@@ -582,72 +698,54 @@
 						"          C_CUSTKEY as integer,",
 						"          C_NAME as string,",
 						"          C_ADDRESS as string,",
-						"          C_NATIONKEY as string,",
+						"          C_NATIONKEY as integer,",
 						"          C_PHONE as string,",
-						"          C_ACCTBAL as string,",
+						"          C_ACCTBAL as double,",
 						"          C_MKTSEGMENT as string,",
 						"          C_COMMENT as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> customer",
-						"source(output(",
-						"          N_NATIONKEY as string,",
-						"          N_NAME as string,",
-						"          N_REGIONKEY as string,",
-						"          N_COMMENT as string",
+						"     ignoreNoFilesFound: false) ~> Customer",
+						"DeleteNullrecord derive(C_NAME = iifNull(C_NAME, 'unknown', C_NAME)) ~> removrenullwithunknown",
+						"Customer alterRow(deleteIf(isNull(C_CUSTKEY))) ~> DeleteNullrecord",
+						"removrenullwithunknown sort(desc(C_ACCTBAL, true)) ~> sortaccbal",
+						"sortaccbal sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          custkey as integer,",
+						"          cname as string,",
+						"          caddress as string,",
+						"          cnation as integer,",
+						"          cphone as string,",
+						"          caccbal as double,",
+						"          cmanagement as string,",
+						"          ccomminsion as string",
 						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> nation",
-						"source(output(",
-						"          R_REGIONKEY as string,",
-						"          R_NAME as string,",
-						"          R_COMMENT as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> region",
-						"source(output(",
-						"          O_ORDERKEY as string,",
-						"          O_CUSTKEY as string,",
-						"          O_ORDERSTATUS as string,",
-						"          O_TOTALPRICE as string,",
-						"          O_ORDERDATE as string,",
-						"          O_ORDERPRIORITY as string,",
-						"          O_CLERK as string,",
-						"          O_SHIPPRIORITY as string,",
-						"          O_COMMENT as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"customer alterRow(deleteIf(isNull(C_CUSTKEY)&&isNull(C_NATIONKEY))) ~> DeleteNullrecords",
-						"nation, region join(N_REGIONKEY == R_REGIONKEY,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joinnationregion",
-						"joinnationregion sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
 						"     mapColumn(",
-						"          NATIONKEY = N_NATIONKEY,",
-						"          NATIONNAME = N_NAME,",
-						"          NATIONREGIONKEY = N_REGIONKEY,",
-						"          REGIONKEY = R_REGIONKEY,",
-						"          REGIONNAME = R_NAME",
-						"     )) ~> sink1"
+						"          custkey = C_CUSTKEY,",
+						"          cname = C_NAME,",
+						"          caddress = C_ADDRESS,",
+						"          cnation = C_NATIONKEY,",
+						"          cphone = C_PHONE,",
+						"          caccbal = C_ACCTBAL,",
+						"          cmanagement = C_MKTSEGMENT,",
+						"          ccomminsion = C_COMMENT",
+						"     )) ~> sinkinsql"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/customer')]",
-				"[concat(variables('factoryId'), '/datasets/nation')]",
-				"[concat(variables('factoryId'), '/datasets/region')]",
-				"[concat(variables('factoryId'), '/datasets/orders')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
 			]
 		},
 		{
@@ -674,11 +772,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"customer": {},
-									"nation": {},
-									"region": {},
-									"source1": {},
-									"sink1": {}
+									"Customer": {},
+									"sinkinsql": {}
 								}
 							},
 							"staging": {},
